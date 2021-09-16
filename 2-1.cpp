@@ -1,24 +1,11 @@
 #include <iostream>
 #include <string>
-#include <sstream>
 #include <algorithm>
 #include <queue>
-#include <utility>
 #include <vector>
 
 using namespace std;
 
-queue<string> split(string str, char delimiter) {
-	queue<string> ans;
-	stringstream ss(str);
-	string s;
-	
-	while (getline(ss, s, delimiter)) {
-		ans.push(s);
-	}
-
-	return ans;
-}
 
 int main() {
 
@@ -26,21 +13,24 @@ int main() {
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	int T, N, M, kj;
+	int T, N, M, kj, words;
 	queue<string> w;
-	queue<string> temp;
 	string sen, sentemp;
 	vector<vector<string>> sjk;
-	bool ok = true;
 	cin >> T;
-	
-	cin >> N >> M;
-	getline(cin, sen);
-	sjk.resize(N);
+
 	for (int i = 0; i < T; i++) {
-		getline(cin, sen);
-		w = split(sen, ' ');
-		
+		cin >> N >> M;
+		sjk.resize(N);
+		bool ok = true;
+		cin.ignore();
+
+
+		for (int j = 0; j < M; j++) {
+			cin >> sen;
+			w.push(sen);
+		}
+
 		for (int j = 0; j < N; j++) {
 			cin >> kj;
 			for (int k = 0; k < kj; k++) {
@@ -49,16 +39,19 @@ int main() {
 			}
 		}
 
-		for (int j = 0; j < w.size(); j++) {
+		for (int j = 0; j < M; j++) {
 			for (int k = 0; k < N; k++) {
 				if (sjk[k].front() == w.front()) {
 					w.pop();
-					continue;
+					sjk[k].erase(sjk[k].begin());
+					break;
 				}
 				if (k == N - 1) {
 					ok = false;
-					break;
 				}
+			}
+			if (ok == false) {
+				break;
 			}
 		}
 
@@ -68,7 +61,11 @@ int main() {
 		else {
 			cout << 0 << "\n";
 		}
+
+		while (!w.empty()) {
+			w.pop();
+		}
+		sjk.clear();
 	}
 
 }
-
